@@ -26,6 +26,14 @@ include_recipe 'orientdb::resources'
 include_recipe 'orientdb::scripts'
 include_recipe 'orientdb::configuration'
 
+# Fix the orientdb.sh script
+template 'orientdb.sh' do
+  source "node['orientdb']['installation_directory']/bin/orientdb_sh.erb"
+  owner node['orientdb']['user']['id']
+  group node['orientdb']['user']['id']
+  mode '0755'
+  action :create
+end
 # Start the new OrientDB Service.
 service 'orientdb_new' do
   service_name 'orientdb'

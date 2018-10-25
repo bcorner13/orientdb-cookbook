@@ -42,6 +42,7 @@ when 'rhel'
               Type: 'notify',
               User: 'ORIENTDB_USER',
               Group: 'ORIENTDB_GROUP',
+              ExecStop: "#{node['orientdb']['installation_directory']}/bin/shutdown.sh",
               ExecStart: "#{node['orientdb']['installation_directory']}/bin/server.sh",
               Restart: 'always',
             },
