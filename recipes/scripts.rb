@@ -31,32 +31,24 @@ when 'debian'
     command "sed -i 's|server daemon is NOT running\"|& \\&\\& exit 3|' #{node['orientdb']['init_script']}"
   end
 when 'rhel'
-  log 'filler'
+  log "We don't setup orientdb service here"
   systemd_unit 'orientdb.service' do
+    user node['orientdb']['user']['id']
+    triggers_reload true
     content(Unit: {
               Description: 'OrientDB Server',
               Documentation: ['http://www.orientdb.com/docs/last/index.html'],
-              After: 'network.target,syslog.target',
+              After: 'network.target',
             },
             Service: {
               Type: 'notify',
-              User: 'ORIENTDB_USER',
-              Group: 'ORIENTDB_GROUP',
               ExecStop: "#{node['orientdb']['installation_directory']}/bin/shutdown.sh",
-              ExecStart: "#{node['orientdb']['installation_directory']}/bin/server.sh",
+              ExecStart: "#{node['orientdb']['installation_directory']}/bin/startup.sh",
               Restart: 'always',
             },
             Install: {
               WantedBy: 'multi-user.target',
             })
     action :create
-  end
-  service 'orientdb' do
-    init_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh"
-    start_command "#{node['orientdb']['installation_directory']}/bin/server.sh"
-    restart_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh && #{node['orientdb']['installation_directory']}/bin/server.sh"
-    stop_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh"
-    supports status: false, restart: true, reload: false
-    action [:enable, :start]
   end
 end

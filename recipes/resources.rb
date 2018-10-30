@@ -32,7 +32,7 @@ when 'debian'
   end
 
 when 'rhel'
-  log "Installing into #{node['orientdb']['installation_directory']}"
+  log "Installing into: #{node['orientdb']['installation_directory']} Version:#{node['orientdb']['version']}"
   download_file = "https://s3.us-east-2.amazonaws.com/orientdb3/releases/#{node['orientdb']['version']}/orientdb-#{node['orientdb']['version']}.tar.gz"
   poise_archive download_file.to_s do
     destination (node['orientdb']['installation_directory']).to_s

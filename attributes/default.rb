@@ -13,6 +13,8 @@ default['orientdb']['init_script'] = '/etc/init.d/orientdb'
 default['orientdb']['db_user'] = 'admin'
 default['orientdb']['db_password'] = 'admin'
 
+default['orientdb']['profilerManaged'] = 'true'
+
 default['orientdb']['hazelcast']['nodeName'] = node.name
 default['orientdb']['hazelcast']['enabled'] = true
 default['orientdb']['hazelcast']['group']['name'] = 'orientdb'

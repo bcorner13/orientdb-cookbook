@@ -23,25 +23,29 @@ end
 include_recipe 'orientdb::user'
 include_recipe 'orientdb::structure'
 include_recipe 'orientdb::resources'
-include_recipe 'orientdb::scripts'
-include_recipe 'orientdb::configuration'
-
 # Fix the orientdb.sh script
-template 'orientdb.sh' do
-  source "node['orientdb']['installation_directory']/bin/orientdb_sh.erb"
+template "#{node['orientdb']['installation_directory']}/bin/orientdb.sh" do
+  source 'orientdb_sh.erb'
   owner node['orientdb']['user']['id']
   group node['orientdb']['user']['id']
+  variables(
+    installation_directory: node['orientdb']['installation_directory'].to_s,
+    db_user: node['orientdb']['user']['id'].to_s
+  )
   mode '0755'
   action :create
 end
+include_recipe 'orientdb::scripts'
+include_recipe 'orientdb::configuration'
+
 # Start the new OrientDB Service.
-service 'orientdb_new' do
+service 'orientdb' do
   service_name 'orientdb'
-  init_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh"
-  start_command "#{node['orientdb']['installation_directory']}/bin/server.sh"
-  restart_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh && #{node['orientdb']['installation_directory']}/bin/server.sh"
-  stop_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh"
-  supports status: true, start: true, stop: true
+  # init_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh"
+  # start_command "#{node['orientdb']['installation_directory']}/bin/server.sh"
+  # restart_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh && #{node['orientdb']['installation_directory']}/bin/server.sh"
+  # stop_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh"
+  # supports status: true, start: true, stop: true
   action [:enable, :start]
 end
 # service 'orientdb_new' do
