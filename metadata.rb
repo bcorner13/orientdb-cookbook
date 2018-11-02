@@ -4,7 +4,7 @@ maintainer_email 'fgimenez@coit.es'
 license          'Apache-2.0'
 description      'Installs/Configures OrientDB'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.6.0'
+version          '0.6.20'
 chef_version '>= 13'
 issues_url 'https://github.com/fgimenez/orientdb-cookbook/issues'
 source_url 'https://github.com/fgimenez/orientdb-cookbook.git'
