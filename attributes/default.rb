@@ -16,7 +16,7 @@ default['orientdb']['db_password'] = 'admin'
 default['orientdb']['profilerManaged'] = 'true'
 
 default['orientdb']['hazelcast']['nodeName'] = node.name
-default['orientdb']['hazelcast']['enabled'] = true
+default['orientdb']['hazelcast']['enabled'] = false
 default['orientdb']['hazelcast']['group']['name'] = 'orientdb'
 default['orientdb']['hazelcast']['group']['password'] = 'orientdb'
 default['orientdb']['hazelcast']['network']['port'] = '2434'
