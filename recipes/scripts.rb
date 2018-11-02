@@ -31,24 +31,24 @@ when 'debian'
     command "sed -i 's|server daemon is NOT running\"|& \\&\\& exit 3|' #{node['orientdb']['init_script']}"
   end
 when 'rhel'
-  log "We don't setup orientdb service here"
-  systemd_unit 'orientdb.service' do
-    user node['orientdb']['user']['id']
-    triggers_reload true
-    content(Unit: {
-              Description: 'OrientDB Server',
-              Documentation: ['http://www.orientdb.com/docs/last/index.html'],
-              After: 'network.target',
-            },
-            Service: {
-              Type: 'notify',
-              ExecStop: "#{node['orientdb']['installation_directory']}/bin/shutdown.sh",
-              ExecStart: "#{node['orientdb']['installation_directory']}/bin/startup.sh",
-              Restart: 'always',
-            },
-            Install: {
-              WantedBy: 'multi-user.target',
-            })
-    action :create
-  end
+  log 'We dont setup orientdb service here'
+  # systemd_unit 'orientdb.service' do
+  #   user node['orientdb']['user']['id']
+  #   triggers_reload true
+  #   content(Unit: {
+  #             Description: 'OrientDB Server',
+  #             Documentation: ['http://www.orientdb.com/docs/last/index.html'],
+  #             After: ['network.target', 'syslog.target'],
+  #           },
+  #           Service: {
+  #             Type: 'notify',
+  #             ExecStop: "#{node['orientdb']['installation_directory']}/bin/shutdown.sh",
+  #             ExecStart: "#{node['orientdb']['installation_directory']}/bin/startup.sh",
+  #             Restart: 'always',
+  #           },
+  #           Install: {
+  #             WantedBy: 'multi-user.target',
+  #           })
+  #   action :create
+  # end
 end
