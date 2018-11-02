@@ -35,17 +35,36 @@ template "#{node['orientdb']['installation_directory']}/bin/orientdb.sh" do
   mode '0755'
   action :create
 end
-include_recipe 'orientdb::scripts'
+
 include_recipe 'orientdb::configuration'
+include_recipe 'orientdb::scripts'
+systemd_unit 'orientdb.service' do
+  # user node['orientdb']['user']['id']
+  verify false
+  content(Unit: {
+            Description: 'OrientDB Server',
+            Documentation: ['http://www.orientdb.com/docs/last/index.html'],
+            After: ['network.target', 'syslog.target'],
+          },
+          Service: {
+            Type: 'notify',
+            ExecStop: "#{node['orientdb']['installation_directory']}/bin/orientdb.sh stop",
+            ExecStart: "#{node['orientdb']['installation_directory']}/bin/orientdb.sh start",
+            Restart: 'always',
+          },
+          Install: {
+            WantedBy: 'multi-user.target',
+          })
+  action :create
+end
 
 # Start the new OrientDB Service.
-service 'orientdb' do
-  service_name 'orientdb'
+service 'orientdb.service' do
   # init_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh"
-  # start_command "#{node['orientdb']['installation_directory']}/bin/server.sh"
-  # restart_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh && #{node['orientdb']['installation_directory']}/bin/server.sh"
-  # stop_command "#{node['orientdb']['installation_directory']}/bin/shutdown.sh"
-  # supports status: true, start: true, stop: true
+  start_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh start"
+  restart_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh stop && #{node['orientdb']['installation_directory']}/bin/orientdb.sh start"
+  stop_command "#{node['orientdb']['installation_directory']}/bin/orientdb.sh stop"
+  supports status: true, start: true, stop: true
   action [:enable, :start]
 end
 # service 'orientdb_new' do
